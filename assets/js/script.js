@@ -3,6 +3,7 @@ var taskIdCounter = 0;
 
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
+var pageContentEl = document.querySelector("#page-content");
 
 var taskFormHandler = function(event) {
     event.preventDefault();
@@ -101,6 +102,48 @@ var createTaskActions = function(taskId) {
 
 formEl.addEventListener("submit", taskFormHandler);
 
+var taskButtonHandler = function(event) {
+      // get target element from event
+  var targetEl = event.target;
+
+  // edit button was clicked
+  if (targetEl.matches(".edit-btn")) {
+    var taskId = targetEl.getAttribute("data-task-id");
+    editTask(taskId);
+  } 
+  // delete button was clicked
+  else if (targetEl.matches(".delete-btn")) {
+    var taskId = targetEl.getAttribute("data-task-id");
+    deleteTask(taskId);
+  }
+  
+};
+
+var editTask = function(taskId) {
+    console.log("editing task #" + taskId);
+
+    formEl.setAttribute("data-task-id", taskId);
+
+    // get task list item element
+var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+// get content from task name and type
+var taskName = taskSelected.querySelector("h3.task-name").textContent;
+console.log(taskName);
+
+var taskType = taskSelected.querySelector("span.task-type").textContent;
+document.querySelector("input[name='task-name']").value = taskName;
+document.querySelector("select[name='task-type']").value = taskType;
+document.querySelector("#save-task").textContent = "Save Task";
+};
+
+var deleteTask = function(taskId) {
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    taskSelected.remove();
+  };
+
+pageContentEl.addEventListener("click", taskButtonHandler);
+
 
 
 
@@ -114,3 +157,6 @@ i < statusChoices.length keeps the for loop running by checking the iterator aga
 i++ increments the counter by one after each loop iteration
 statusChoices[i] returns the value of the array at the given index (for example, when i = 0, or statusChoices[0], we get the first item) */
 
+
+
+/* In the past, we've used querySelector() with the document object, but any DOM element can use this method. document.querySelector() searches within the document element, which is the entire page, while taskSelected.querySelector() only searches within the tastSelected element. Thus, we can narrow our search to the task item at hand to find its name (h3.task-name) and type (span.task-type). */
